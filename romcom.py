@@ -3,10 +3,11 @@ import py7zr
 
 class RomCompressor:
 
-    def __init__(self, input_dir, input_file_extension, output_dir):
+    def __init__(self, input_dir, input_file_extension, output_dir, output_file_extension):
         self.input_dir = input_dir
         self.input_file_extension = input_file_extension
         self.output_dir = output_dir
+        self.output_file_extension = output_file_extension
 
 
     def __gen_rand_uuid(self):
@@ -45,26 +46,30 @@ class RomCompressor:
         output_root_path = os.path.join(output_dir, output_prefix) 
         print("TODO - mkdir output root path: %s" % output_root_path)
 
-        if output_root_path:
-            print("making directory %s" % output_root_path)
-            os.makedirs(output_root_path, exist_ok=True)
+        print("making directory %s" % output_root_path)
+        os.makedirs(output_root_path, exist_ok=True)
+
+        if os.path.isdir(output_root_path):
 
             for root, dirs, files in os.walk(input_dir):
                 relative_path = os.path.relpath(root, input_dir)
                 output_relative_path = os.path.join(output_root_path, relative_path)
             
                 print("making directory %s" % output_relative_path)
-                #os.makedirs(output_relative_path, exist_ok=True)
+                os.makedirs(output_relative_path, exist_ok=True)
                 
-                for file in files:
-                    file_tuple = os.path.splitext(file)
-                    file_name = file_tuple[0]
-                    file_ext = file_tuple[1]
+                if os.path.isdir(output_relative_path): 
+                    for file in files:
+                        file_tuple = os.path.splitext(file)
+                        file_name = file_tuple[0]
+                        file_ext = file_tuple[1]
 
-                    if file_ext and self.input_file_extension == file_ext:
-                        #print(file)
-                        #print(os.path.join(root, file))
-                        ''''''
+                        if file_ext and self.input_file_extension == file_ext:
+                            #print(file)
+                            #print(os.path.join(root, file))
+
+                            output_file = f'{file_name}{self.output_file_extension}'
+                            print("output file: %s" % os.path.join(output_relative_path, output_file))
 
 
     def start_compressor(self, custom_input_dir=None, custom_output_dir=None):
@@ -108,8 +113,9 @@ def main():
     input_dir = sys.argv[1]
     input_file_extension = sys.argv[2]
     output_dir = sys.argv[3]
+    output_file_extension = ".7z"
 
-    compressor = RomCompressor(input_dir, input_file_extension, output_dir)
+    compressor = RomCompressor(input_dir, input_file_extension, output_dir, output_file_extension)
     compressor.start_compressor()
 
     #output_directory = os.path.join(output_root,
