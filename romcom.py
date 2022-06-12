@@ -42,17 +42,29 @@ class RomCompressor:
         rand_prefix = self.__gen_rand_uuid()
 
         output_prefix = ''.join(("compressed-", rand_prefix[-10:]))
-        print("TODO - mkdir output root path: %s" % os.path.join(output_dir, output_prefix))
+        output_root_path = os.path.join(output_dir, output_prefix) 
+        print("TODO - mkdir output root path: %s" % output_root_path)
 
-        for root, dirs, files in os.walk(input_dir):
-            for file in files:
-                file_tuple = os.path.splitext(file)
-                file_name = file_tuple[0]
-                file_ext = file_tuple[1]
+        if output_root_path:
+            print("making directory %s" % output_root_path)
+            os.makedirs(output_root_path, exist_ok=True)
 
-                if file_ext and self.input_file_extension == file_ext:
-                    print(file)
-                #print(os.path.join(root, file))
+            for root, dirs, files in os.walk(input_dir):
+                relative_path = os.path.relpath(root, input_dir)
+                output_relative_path = os.path.join(output_root_path, relative_path)
+            
+                print("making directory %s" % output_relative_path)
+                #os.makedirs(output_relative_path, exist_ok=True)
+                
+                for file in files:
+                    file_tuple = os.path.splitext(file)
+                    file_name = file_tuple[0]
+                    file_ext = file_tuple[1]
+
+                    if file_ext and self.input_file_extension == file_ext:
+                        #print(file)
+                        #print(os.path.join(root, file))
+                        ''''''
 
 
     def start_compressor(self, custom_input_dir=None, custom_output_dir=None):
