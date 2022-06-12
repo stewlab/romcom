@@ -73,14 +73,28 @@ class RomCompressor:
                             #print(file)
                             #print(os.path.join(root, file))
 
-                            output_file = f'{file_name}{self.output_file_extension}'
+                            input_file_fullpath = os.path.join(root, file)
+
+                            output_file_name = f'{file_name}{self.output_file_extension}'
 
                             if is_root_dir:
-                                output_file_fullpath = os.path.join(output_root_path, output_file)
+                                #output_relative_path = ""
+                                output_file_fullpath = os.path.join(output_root_path, output_file_name)
                             else:
-                                output_file_fullpath = os.path.join(output_relative_path, output_file) 
+                                #output_relative_path = os.path.join(relative_path, output_file)
+                                output_file_fullpath = os.path.join(output_relative_path, output_file_name)
 
                             print("output file: %s" % output_file_fullpath)
+                            
+                            if output_file_fullpath:
+                                self.__create_seven_zip(input_file_fullpath, output_file_fullpath, file)
+
+
+    def __create_seven_zip(self, input_fullpath, archive_fullpath, input_file_name):
+        print("compressing %s to %s" % (input_fullpath, archive_fullpath))
+
+        with py7zr.SevenZipFile(archive_fullpath, 'w') as archive:
+            archive.writeall(input_fullpath, input_file_name)
 
 
     def start_compressor(self, custom_input_dir=None, custom_output_dir=None):
