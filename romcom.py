@@ -52,11 +52,16 @@ class RomCompressor:
         if os.path.isdir(output_root_path):
 
             for root, dirs, files in os.walk(input_dir):
+                
+
                 relative_path = os.path.relpath(root, input_dir)
                 output_relative_path = os.path.join(output_root_path, relative_path)
-            
-                print("making directory %s" % output_relative_path)
-                os.makedirs(output_relative_path, exist_ok=True)
+                
+                is_root_dir = root == input_dir
+
+                if not is_root_dir:
+                    print("making directory %s" % output_relative_path)
+                    os.makedirs(output_relative_path, exist_ok=True)
                 
                 if os.path.isdir(output_relative_path): 
                     for file in files:
@@ -69,7 +74,13 @@ class RomCompressor:
                             #print(os.path.join(root, file))
 
                             output_file = f'{file_name}{self.output_file_extension}'
-                            print("output file: %s" % os.path.join(output_relative_path, output_file))
+
+                            if is_root_dir:
+                                output_file_fullpath = os.path.join(output_root_path, output_file)
+                            else:
+                                output_file_fullpath = os.path.join(output_relative_path, output_file) 
+
+                            print("output file: %s" % output_file_fullpath)
 
 
     def start_compressor(self, custom_input_dir=None, custom_output_dir=None):
