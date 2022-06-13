@@ -69,13 +69,13 @@ class RomCompressor:
                         file_name = file_tuple[0]
                         file_ext = file_tuple[1]
 
-                        if file_ext and self.input_file_extension == file_ext:
+                        if file_ext and self.input_file_extension and file_ext.lower() == self.input_file_extension.lower():
                             #print(file)
                             #print(os.path.join(root, file))
 
                             input_file_fullpath = os.path.join(root, file)
 
-                            output_file_name = f'{file_name}{self.output_file_extension}'
+                            output_file_name = f'{file_name}{self.output_file_extension.lower()}'
 
                             if is_root_dir:
                                 #output_relative_path = ""
